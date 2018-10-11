@@ -1,0 +1,60 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+"""This file creates the data set and plots the data points and the line
+that separates them into two classes
+"""
+
+"""fuction that plots the line that separates the data points into class S_1 and S_0"""
+
+def abline(slope, intercept):
+    """Plot a line from slope and intercept"""
+    axes = plt.gca()
+    x_vals = np.array(axes.get_xlim())
+    y_vals = intercept + slope * x_vals
+    plt.plot(x_vals, y_vals, '--')
+
+
+w_0 = np.random.uniform(-0.25, 0.25, 1)
+w_1 = np.random.uniform(-1, 1, 1)
+w_2 = np.random.uniform(-1, 1, 1)
+w_array = np.array([w_0, w_1, w_2])
+np.save('initialWeights', w_array)
+print w_array
+x_vector = []
+s_1 = []
+s_0 = []
+s = []
+x_co = np.random.uniform(-1, 1, 1000)
+y_co = np.random.uniform(-1, 1, 1000)
+slope_0 = np.true_divide(-w_1, w_2)
+intercept_0 = np.true_divide(-w_0, w_2)
+
+for j in range(1000):
+    x_vector_temp = np.array([1, x_co[j], y_co[j]])
+    w_array_t = np.transpose(w_array)
+    x_vector.append(x_vector_temp)
+    point_co = np.array([x_co[j], y_co[j]])
+    cal_output = np.dot(w_array_t, x_vector_temp)
+    s.append(point_co)
+    if cal_output >= 0:
+        s_1.append(point_co)
+        plt.scatter(x_co[j], y_co[j], color='blue', s=4)
+    else:
+        s_0.append(point_co)
+        plt.scatter(x_co[j], y_co[j], color='red', s=4)
+
+abline(slope_0, intercept_0)
+
+s = np.asarray(s)
+s_0 = np.asarray(s_0)
+s_1 = np.asarray(s_1)
+print s
+print("dimension")
+print s.shape
+plt.savefig('initialDistribution.png')
+
+"""saves the data points in a .npy file for the perceptron training program"""
+np.save('s_allPoints', s)
+np.save('s_1_points', s_1)
+np.save('s_0_point', s_0)
